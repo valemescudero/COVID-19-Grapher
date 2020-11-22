@@ -16,15 +16,48 @@ import matplotlib.pyplot as plt
 df = pd.read_csv("full_data.csv")
 
 
-def get_cases(selected_country, start_date, end_date):
-  country = df[(df["date"].between(start_date, end_date))&(df["location"] == selected_country)]
+
+def get_countries(countries):
+  next = '0'
+
+  while next != '2':
+    print("1. Ingresar país")
+    print("2. Resetear países")
+    print("3. Volver al menú principal")
+    next = input("")
+    if next == '1':
+      country = input("Ingresá el nombre del país (en inglés)").capitalize()
+      countries.push(country)
+      get_countries(countries)
+    elif next == '2':
+      countries = []
+    elif next != '3':
+      print("Opción inválida")
+      get_countries(countries)
+
+def get_time_frame(dates):
+    print("1. Modificar rango de tiempo")
+    print("2. Volver al menú principal")
+    next = input("")
+    if next == '1':
+      dates[0] = input("Ingresá fecha de inicio en formato aaaa-mm-dd")
+      dates[1] = input("Ingresá fecha de límite en formato aaaa-mm-dd")
+      get_time_frame(dates)
+    elif next != '2':
+      print("Opción inválida")
+      get_time_frame(dates)
+
+
+
+def get_cases(selected_country, dates):
+  country = df[(df["date"].between(dates[0],dates[1]))&(df["location"] == selected_country)]
   dates = list(country["date"])
   cases = list(country["total_cases"])
   plt.plot(dates,cases, linestyle="solid", label=selected_country)
     
 
-def get_deaths(selected_country, start_date, end_date):
-  country = df[(df["date"].between(start_date, end_date))&(df["location"] == selected_country)]
+def get_deaths(selected_country, dates):
+  country = df[(df["date"].between(dates[0],dates[1]))&(df["location"] == selected_country)]
   dates = list(country["date"])
   deaths = list(country["total_deaths"])
   plt.plot_date(dates,deaths, linestyle="solid")
@@ -58,54 +91,39 @@ def crearCruces(x_dias1, y_datos1, x_dias2, y_datos2):
 
 
 def programa():
-  another_country = "si"
   option = '0'
-
-    while (option != '4'):
-      print("GRAFICADOR COVID-19\n")
-      print("Ingrese una opción para continuar:")
-      print("1. Modificar países de consulta")
-      print("2. Consultar casos totales")
-      print("3. Consultar muertes totales")
-      print("4. Salir")
-      option = input("")
-
-      if option == '1':
-        get_countries()
-      elif option == '2':
-        get_cases()
-      elif option == '3':
-        get_deaths()
-      elif option == '4':
-        break
-      else:
-        print("Opción inválida")
-        break
-      }  
-    
-    
-    
-    
-    
-    
-    
-  deaths_or_cases = input("Qué dato queres saber? Ingresá 'casos' para ver los casos totales o 'fallecimientos' para ver las muertes")
-  start_date= input("Desde qué fecha querés ver los casos? Ingresar la fecha en formato aaaa-mm-dd")
-  end_date = input("Hasta qué fecha querés ver los casos? Ingresar la fecha en formato aaaa-mm-dd")
   countries = []
+  dates = ['start', 'end']
 
-  while another_country=="si":
-    country = input("Ingresá el país (en inglés)").capitalize()
-    countries.push(country)
-    another_country=input("Querés ver otro país? Responde 'si' o 'no'")
+  while option != '5':
+    print("GRAFICADOR COVID-19\n")
+    print("Ingrese una opción para continuar:")
+    print("1. Modificar países de consulta")
+    print("2. Modificar rango de tiempo")
+    print("3. Consultar casos totales")
+    print("4. Consultar muertes totales")
+    print("5. Salir")
+    option = input("")
 
-  for country in countries:
-    if deaths_or_cases=="casos":
-      get_cases(country,start_date,end_date)
-    elif deaths_or_cases=="fallecimientos":
-      get_deaths(country,start_date,end_date)
-  
-  plt.legend()
-  plt.show()
+    if option == '1':
+      get_countries(countries)
+    elif option == '2':
+      get_time_frame(dates)
+    elif option == '3':
+      for country in countries:
+        get_cases(country, dates)
+      plt.legend()
+      plt.show()
+    elif option == '4':
+      for country in countries:
+        get_deaths(country, dates)
+      plt.legend()
+      plt.show()
+    elif option == '5':
+      break
+    else:
+      print("Opción inválida")
+      break
+
 
 programa()
