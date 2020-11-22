@@ -59,6 +59,36 @@ def crearCruces(x_dias1, y_datos1, x_dias2, y_datos2):
 
 def programa():
   another_country = "si"
+  option = '0'
+
+    while (option != '4'):
+      print("GRAFICADOR COVID-19\n")
+      print("Ingrese una opción para continuar:")
+      print("1. Modificar países de consulta")
+      print("2. Consultar casos totales")
+      print("3. Consultar muertes totales")
+      print("4. Salir")
+      option = input("")
+
+      if option == '1':
+        get_countries()
+      elif option == '2':
+        get_cases()
+      elif option == '3':
+        get_deaths()
+      elif option == '4':
+        break
+      else:
+        print("Opción inválida")
+        break
+      }  
+    
+    
+    
+    
+    
+    
+    
   deaths_or_cases = input("Qué dato queres saber? Ingresá 'casos' para ver los casos totales o 'fallecimientos' para ver las muertes")
   start_date= input("Desde qué fecha querés ver los casos? Ingresar la fecha en formato aaaa-mm-dd")
   end_date = input("Hasta qué fecha querés ver los casos? Ingresar la fecha en formato aaaa-mm-dd")
