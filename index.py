@@ -20,20 +20,20 @@ df = pd.read_csv("full_data.csv")
 def get_countries(countries):
   next = '0'
 
-  while next != '2':
+  while next != '3':
     print("1. Ingresar país")
     print("2. Resetear países")
     print("3. Volver al menú principal")
     next = input("")
     if next == '1':
       country = input("Ingresá el nombre del país (en inglés)").capitalize()
-      countries.push(country)
-      get_countries(countries)
+      countries.append(country)
     elif next == '2':
       countries = []
-    elif next != '3':
+    elif next == '3':
+      return
+    else:
       print("Opción inválida")
-      get_countries(countries)
 
 def get_time_frame(dates):
     print("1. Modificar rango de tiempo")
@@ -42,10 +42,10 @@ def get_time_frame(dates):
     if next == '1':
       dates[0] = input("Ingresá fecha de inicio en formato aaaa-mm-dd")
       dates[1] = input("Ingresá fecha de límite en formato aaaa-mm-dd")
-      get_time_frame(dates)
-    elif next != '2':
+    elif next == '2':
+        return
+    else:
       print("Opción inválida")
-      get_time_frame(dates)
 
 
 
