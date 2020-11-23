@@ -121,7 +121,7 @@ def programa():
       for country in countries:
         get_cases(country, dates)
       for i in range(len(countries-1)):
-        for j in range(len(countries-1)):
+        for j in range(len(countries)):
             crear_cruces(countries[i], countries[j])
       plt.legend()
       plt.show()
@@ -129,7 +129,7 @@ def programa():
       for country in countries:
         get_deaths(country, dates)
       for i in range(len(countries-1)):
-        for j in range(len(countries-1)):
+        for j in range(len(countries)):
             crear_cruces(countries[i], countries[j])
       plt.legend()
       plt.show()
