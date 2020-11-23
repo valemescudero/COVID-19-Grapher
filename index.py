@@ -51,7 +51,7 @@ def get_time_frame(dates):
 
 
 def get_cases(selected_country, dates, countries_data):
-  country = list(df[(df["date"].between(dates[0],dates[1]))&(df["location"] == selected_country)])
+  country = df[(df["date"].between(dates[0],dates[1]))&(df["location"] == selected_country)]
   countries_data.append(country)
   cases_dates = list(country["date"])
   cases = list(country["total_cases"])
@@ -59,7 +59,7 @@ def get_cases(selected_country, dates, countries_data):
     
 
 def get_deaths(selected_country, dates, countries_data):
-  country = list(df[(df["date"].between(dates[0],dates[1]))&(df["location"] == selected_country)])
+  country = df[(df["date"].between(dates[0],dates[1]))&(df["location"] == selected_country)]
   countries_data.append(country)
   deaths_dates = list(country["date"])
   deaths = list(country["total_deaths"])
