@@ -51,44 +51,52 @@ def get_time_frame(dates):
 
 def get_cases(selected_country, dates):
   country = df[(df["date"].between(dates[0],dates[1]))&(df["location"] == selected_country)]
-  dates = list(country["date"])
+  cases_dates = list(country["date"])
   cases = list(country["total_cases"])
-  plt.plot(dates,cases, linestyle="solid", label=selected_country)
+  plt.plot(cases_dates,cases, linestyle="solid", label=selected_country)
     
 
 def get_deaths(selected_country, dates):
   country = df[(df["date"].between(dates[0],dates[1]))&(df["location"] == selected_country)]
-  dates = list(country["date"])
+  deaths_dates = list(country["date"])
   deaths = list(country["total_deaths"])
-  plt.plot_date(dates,deaths, linestyle="solid")
+  plt.plot_date(deaths_dates,deaths, linestyle="solid")
+    
+
+  
     
     
-def crearCruces(x_dias1, y_datos1, x_dias2, y_datos2):
-  dict01 = {}
-  dict02 = {}
-  x_fechas  = []
-  y_valores = []
-  fechas = []
+def crear_cruces(first_country, second_country, option):
+  x_first_country = [first_country["Date"][0]]
+  x_second_country = [second_country["Date"][0]]
+  if option == 3:
+    y_first_country = [first_country["total_cases"][0]]
+    y_second_country = [first_country["total_cases"][0]]
+  else:
+    y_first_country = [first_country["total_deaths"][0]]
+    y_second_country = [first_country["total_deaths"][0]]
+  crucex = []
+  crucey = []
+  
+  for i in range(1, len(first_country["Date"]))
+    x_first_country.append(first_country["Date"][i])
+    x_second_country.append(first_country["Date"][i])
+    if option == 3:
+      x_first_country.append(first_country["total_cases"][i])
+      x_second_country.append(first_country["total_cases"][i])
+    else:
+      x_first_country.append(first_country["total_deaths"][i])
+      x_second_country.append(first_country["total_deaths"][i])
+        
+  if (y_first_country[i] == y_second_country[i]) or (y_first_country[i] > y_second_country[i] and y_first_country[i-1] < y_second_country[i-1]) or (y_first_country[i] < y_second_country[i] and y_first_country[i-1] > y_second_country[i-1]):
+    crucex.append(x_second_country[i])
+    crucey.append(y_second_country[i])
 
-  for x in range(len(y_datos1)):
-    dict01[x_dias1[x]] = y_datos1[x]
-
-  for x in range(len(y_datos2)):
-    dict02[x_dias2[x]] = y_datos2[x]
-
-  fechas = [value for value in x_dias1 if value in x_dias2] 
-
-  for x in range(len(fechas)):
-    valor01 = dict01[fechas[x]]
-    valor02 = dict02[fechas[x]]
-    if ((valor01 >= valor02) and (dict01[fechas[x-1]] < dict02[fechas[x-1]])):
-      x_fechas.append(fechas[x])
-      y_valores.append((valor01 + valor02) // 2)
-    elif valor01 <= valor02 and dict01[fechas[x-1]] > dict02[fechas[x-1]]:
-      x_fechas.append(fechas[x])
-      y_valores.append((valor01 + valor02) // 2)
-  return x_fechas, y_valores
-
+  plt.plot(x_second_country,y_second_country)
+  plt.plot(x_first_country,y_first_country)
+  plt.plot(crucex,crucey, 'k.')
+  plt.xticks(x_second_country[::100], rotation=60)
+    
 
 def programa():
   option = '0'
@@ -112,11 +120,17 @@ def programa():
     elif option == '3':
       for country in countries:
         get_cases(country, dates)
+      for i in range(len(countries-1)):
+        for j in range(len(countries-1)):
+            crear_cruces(countries[i], countries[j])
       plt.legend()
       plt.show()
     elif option == '4':
       for country in countries:
         get_deaths(country, dates)
+      for i in range(len(countries-1)):
+        for j in range(len(countries-1)):
+            crear_cruces(countries[i], countries[j])
       plt.legend()
       plt.show()
     elif option == '5':
