@@ -69,36 +69,29 @@ def get_deaths(selected_country, dates, countries_data):
   
     
     
-def crear_cruces(first_country, second_country, option):
-  print(first_country)
+def crear_cruces(first_country, second_country, option, dates):
+  first_country = df[(df["date"].between(dates[0],dates[1]))&(df["location"] == first_country)]
+  second_country = df[(df["date"].between(dates[0],dates[1]))&(df["location"] == second_country)]
+  
+  x_first_country = list(first_country["date"])
+  x_second_country = list(second_country["date"])
 
-  x_first_country = [first_country["Date"][0]]
-  x_second_country = [second_country["Date"][0]]
   if option == 3:
-    y_first_country = [first_country["total_cases"][0]]
-    y_second_country = [first_country["total_cases"][0]]
+    y_first_country = list(first_country["total_cases"])
+    y_second_country = list(second_country["total_cases"])
   else:
-    y_first_country = [first_country["total_deaths"][0]]
-    y_second_country = [first_country["total_deaths"][0]]
+    y_first_country = list(first_country["total_deaths"])
+    y_second_country = list(first_country["total_deaths"])
+
+
   crucex = []
   crucey = []
   
-  for i in range(1, len(first_country["Date"])):
-    x_first_country.append(first_country["Date"][i])
-    x_second_country.append(first_country["Date"][i])
-    if option == 3:
-      x_first_country.append(first_country["total_cases"][i])
-      x_second_country.append(first_country["total_cases"][i])
-    else:
-      x_first_country.append(first_country["total_deaths"][i])
-      x_second_country.append(first_country["total_deaths"][i])
-        
-  if (y_first_country[i] == y_second_country[i]) or (y_first_country[i] > y_second_country[i] and y_first_country[i-1] < y_second_country[i-1]) or (y_first_country[i] < y_second_country[i] and y_first_country[i-1] > y_second_country[i-1]):
-    crucex.append(x_second_country[i])
-    crucey.append(y_second_country[i])
+  for i in range(1, len(x_first_country)):
+    if (y_first_country[i] == y_second_country[i]) or (y_first_country[i] > y_second_country[i] and y_first_country[i-1] < y_second_country[i-1]) or (y_first_country[i] < y_second_country[i] and y_first_country[i-1] > y_second_country[i-1]):
+      crucex.append(x_second_country[i])
+      crucey.append(y_second_country[i])
 
-  plt.plot(x_second_country,y_second_country)
-  plt.plot(x_first_country,y_first_country)
   plt.plot(crucex,crucey, 'k.')
   plt.xticks(x_second_country[::100], rotation=60)
     
@@ -128,7 +121,7 @@ def programa():
         get_cases(country, dates, countries_data)
       for i in range(len(countries)-1):
         for j in range(len(countries)):
-            crear_cruces(countries_data[i], countries_data[j], option)
+            crear_cruces(countries_data[i], countries_data[j], option, dates)
       plt.legend()
       plt.show()
     elif option == '4':
