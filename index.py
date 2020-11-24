@@ -28,6 +28,7 @@ def get_countries():
     elif next == '2':
       newcountries = []
     elif next == '3':
+      newcountries = "nochanges"
       return newcountries
     else:
       print("Opción inválida")
@@ -60,6 +61,7 @@ def get_deaths(selected_country):
   deaths_dates = list(selected_country["data"]["date"])
   deaths = list(selected_country["data"]["total_deaths"])
 
+  
   plt.plot_date(deaths_dates, deaths, linestyle="solid", linewidth=1, label=selected_country["name"])
   plt.yticks([])
   plt.xticks([])
@@ -83,6 +85,7 @@ def crear_cruces(first_country, second_country, option):
       crucex.append(x_second_country[i])
       crucey.append(y_second_country[i])
   if crucex and crucey:
+      plt.figure(figsize=(6,9))
       plt.plot(crucex,crucey, 'ko')
       plt.yticks([])
       plt.xticks([])
@@ -109,6 +112,8 @@ def programa():
       countries_aux = get_countries()
       if not countries_aux:
         countries = []
+      elif countries_aux == "nochanges":
+        print("No se realizaron cambios")
       else:
         for country in countries_aux:
           countries.append(country)
@@ -121,12 +126,15 @@ def programa():
         countries_data.append({"name": countries[i], "data": countrydata})
       for country in countries_data:
         get_cases(country)
-
+        
+      for i in range(len(countries_data)-1):
+        for j in range(1,len(countries_data)):
+          crear_cruces(countries_data[i], countries_data[j], "cases")
+          
       plt.yticks(list(countries_data[0]["data"]["total_cases"]))
       plt.xticks(list(countries_data[0]["data"]["date"]))
       plt.xticks(rotation=45)
       plt.legend()
-      plt.savefig('covid19cases.png')
       plt.show()
   
       break
@@ -136,12 +144,15 @@ def programa():
         countries_data.append({"name": countries[i], "data": countrydata})
       for country in countries_data:
         get_deaths(country)
+        
+      for i in range(len(countries_data)-1):
+        for j in range(1,len(countries_data)):
+          crear_cruces(countries_data[i], countries_data[j], "cases")        
       
       plt.yticks(list(countries_data[0]["data"]["total_deaths"]))
       plt.xticks(list(countries_data[0]["data"]["date"]))
       plt.xticks(rotation=45)
       plt.legend()
-      plt.savefig('covid19deaths.png')
       plt.show()
       break
     elif option == '5':
