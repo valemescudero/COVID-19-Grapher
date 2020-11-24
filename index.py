@@ -1,14 +1,3 @@
-import requests
-
-def wget(url):
-    r = requests.get(url, allow_redirects=True)
-    with open(url[url.rfind('/') + 1::], 'wb') as f:
-        f.write(r.content)
-
-wget("https://covid.ourworldindata.org/data/ecdc/full_data.csv")
-
-! wget "https://covid.ourworldindata.org/data/ecdc/full_data.csv"
-
 
 import pandas as pd
 import numpy as np
@@ -16,7 +5,7 @@ import matplotlib.pyplot as plt
 from datetime import date
 
 
-df = pd.read_csv("full_data.csv")
+df = pd.read_csv("https://covid.ourworldindata.org/data/ecdc/full_data.csv")
 
 
 def get_countries():
@@ -60,18 +49,20 @@ def get_time_frame():
 
 
 def get_cases(selected_country):
-  cases_dates = selected_country["data"]["date"]
-  cases = selected_country["data"]["total_cases"]
+  cases_dates = list(selected_country["data"]["date"])
+  cases = list(selected_country["data"]["total_cases"])
   
-  plt.plot_date(cases_dates,cases, linestyle="solid", label=selected_country["name"])
-  plt.xticks(rotation=45)
+  plt.plot_date(cases_dates,cases, linestyle="solid", linewidth=1, label=selected_country["name"])
+  plt.yticks([])
+  plt.xticks([])
 
 def get_deaths(selected_country):
   deaths_dates = list(selected_country["data"]["date"])
   deaths = list(selected_country["data"]["total_deaths"])
 
-  plt.plot_date(deaths_dates,deaths, linestyle="solid", label=selected_country["name"])
-  plt.xticks(rotation=45)
+  plt.plot_date(deaths_dates, deaths, linestyle="solid", linewidth=1, label=selected_country["name"])
+  plt.yticks([])
+  plt.xticks([])
 
 def crear_cruces(first_country, second_country, option):  
   if (option == '3'):
@@ -93,6 +84,8 @@ def crear_cruces(first_country, second_country, option):
       crucey.append(y_second_country[i])
   if crucex and crucey:
       plt.plot(crucex,crucey, 'ko')
+      plt.yticks([])
+      plt.xticks([])
 
     
 
@@ -100,7 +93,7 @@ def programa():
   option = '0'
   countries = []
   countries_data = []
-  dates = ["2020-03-21","2020-11-21"]
+  dates = ["2020-06-21","2020-09-21"]
 
   while option != '5':
     print("GRAFICADOR COVID-19\n")
@@ -113,7 +106,12 @@ def programa():
     option = input("")
 
     if option == '1':
-      countries = get_countries()
+      countries_aux = get_countries()
+      if not countries_aux:
+        countries = []
+      else:
+        for country in countries_aux:
+          countries.append(country)
       print("Países:", countries)
     elif option == '2':
       dates = get_time_frame() 
@@ -123,11 +121,14 @@ def programa():
         countries_data.append({"name": countries[i], "data": countrydata})
       for country in countries_data:
         get_cases(country)
-      for i in range(len(countries_data)-1):
-        for j in range(1,len(countries_data)):
-          crear_cruces(countries_data[i], countries_data[j], "cases")
+
+      plt.yticks(list(countries_data[0]["data"]["total_cases"]))
+      plt.xticks(list(countries_data[0]["data"]["date"]))
+      plt.xticks(rotation=45)
       plt.legend()
+      plt.savefig('covid19cases.png')
       plt.show()
+  
       break
     elif option == '4':
       for i in range(len(countries)): 
@@ -135,11 +136,12 @@ def programa():
         countries_data.append({"name": countries[i], "data": countrydata})
       for country in countries_data:
         get_deaths(country)
-      for i in range(len(countries_data)-1):
-        for j in range(1,len(countries_data)):
-          crear_cruces(countries_data[i], countries_data[j], "deaths")
       
+      plt.yticks(list(countries_data[0]["data"]["total_deaths"]))
+      plt.xticks(list(countries_data[0]["data"]["date"]))
+      plt.xticks(rotation=45)
       plt.legend()
+      plt.savefig('covid19deaths.png')
       plt.show()
       break
     elif option == '5':
