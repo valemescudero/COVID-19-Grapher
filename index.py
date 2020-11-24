@@ -91,7 +91,7 @@ def crear_cruces(first_country, second_country, option):
     if (y_first_country[i] == y_second_country[i]) or (y_first_country[i-1] > y_second_country[i-1] and y_first_country[i] < y_second_country[i]) or (y_first_country[i-1] < y_second_country[i-1] and y_first_country[i] > y_second_country[i]):
       crucex.append(x_second_country[i])
       crucey.append(y_second_country[i])
-    if crucex != []:
+  if crucex and crucey:
       plt.plot(crucex,crucey, 'ko')
 
     
