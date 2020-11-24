@@ -84,14 +84,15 @@ def crear_cruces(first_country, second_country, option):
   y_first_country = list(first_country["data"][f"total_{deaths_or_cases}"])
   y_second_country = list(second_country["data"][f"total_{deaths_or_cases}"])
   
+  crucex = []
+  crucey = []
 
   for i in range(1, len(x_first_country)):
-    crucex = []
-    crucey = []
-    if (y_first_country[i] == y_second_country[i]) or (y_first_country[i] > y_second_country[i] and y_first_country[i-1] < y_second_country[i-1]) or (y_first_country[i] < y_second_country[i] and y_first_country[i-1] > y_second_country[i-1]):
+    if (y_first_country[i] == y_second_country[i]) or (y_first_country[i-1] > y_second_country[i-1] and y_first_country[i] < y_second_country[i]) or (y_first_country[i-1] < y_second_country[i-1] and y_first_country[i] > y_second_country[i]):
       crucex.append(x_second_country[i])
       crucey.append(y_second_country[i])
-    plt.plot(crucex,crucey, 'ko')
+    if crucex != []:
+      plt.plot(crucex,crucey, 'ko')
 
     
 
